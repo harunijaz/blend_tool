@@ -21,8 +21,11 @@ if __name__ == "__main__":
     target_shape_graph = blend.create_graph_from_xml(path_to_target_shape_xml)
     #print(f"Target data: {len(list(target_shape_graph.edges))}")
 
+    correspondence_txt = blend.parse_correspondence_txt_file("data/CB1_CB2/correspondence.txt")
+    #print(correspondence_txt)
+
     # Create augmented graph
-    G, G0 = blend.create_augmented_graph(source_shape_graph, target_shape_graph)
+    G, G0 = blend.create_augmented_graph(source_shape_graph, target_shape_graph, correspondence_txt)
     """
     blend.add_edges_to_augmented_graph(G, G0)
 

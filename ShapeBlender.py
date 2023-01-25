@@ -1,6 +1,7 @@
 import numpy as np
 from lxml import etree
 import networkx as nx
+import csv
 
 class ShapeBlender:
     '''
@@ -12,10 +13,11 @@ class ShapeBlender:
         self.target_graph = None
         self.inbetween_graph = None
     '''
-    def create_augmented_graph(self, graph_source, graph_target):
+    def create_augmented_graph(self, graph_source, graph_target, correspondence):
         # Create a copy of graph_source
         graph_augmented = graph_source.copy()
         print(list(graph_augmented))
+        print(correspondence)
         # Iterate over all nodes in graph_source
         for node in graph_source:
             # Get the corresponding node in graph_target
@@ -369,3 +371,21 @@ class ShapeBlender:
             print(f"{file_path} not found.")
         except:
             print("An error occurred while loading the shape.")
+
+    def parse_correspondence_txt_file(self, file_path):
+        correspondences = {}
+        line_number = 0
+        with open(file_path, 'r') as file:
+            for line in file:
+                line_number += 1
+                if line_number > 1:
+                    parts = line.strip().split()
+                    if len(parts) > 0:
+                        source_name = parts[0]
+                        target_names = []
+                        for i in range(1, len(parts)):
+                            target_names.append(parts[i])
+                        correspondences[source_name] = target_names
+        return correspondences
+
+
