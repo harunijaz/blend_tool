@@ -12,17 +12,17 @@ if __name__ == "__main__":
     #source_shape = blend.load_shape_from_obj(source_obj_file, "source")
     #target_shape = blend.load_shape_from_obj(target_obj_file, "target")
 
-    # Parse Source and Target XML files
+    # Parse Source XML files
     path_to_source_shape_xml = "data/CB1_CB2/Source/SimpleChair1.xml"
-    source_shape_xml = blend.parse_xml_lxml(path_to_source_shape_xml)
-    print(f"Source data: {source_shape_xml}")
-    # Parse XML file
+    source_shape_graph = blend.create_graph_from_xml(path_to_source_shape_xml)
+    print(f"Source data: {len(list(source_shape_graph.edges))}")
+    # Parse Target XML file
     path_to_target_shape_xml = "data/CB1_CB2/Target/shortChair01.xml"
-    target_shape_xml = blend.parse_xml_lxml(path_to_target_shape_xml)
-    #print(f"Target data: {target_shape_xml}")
+    target_shape_graph = blend.create_graph_from_xml(path_to_target_shape_xml)
+    print(f"Target data: {len(list(target_shape_graph.edges))}")
 
     # Create augmented graph
-    G, G0 = blend.create_augmented_graph(source_shape_xml, target_shape_xml)
+    #G, G0 = blend.create_augmented_graph(source_shape_xml, target_shape_xml)
     """
     blend.add_edges_to_augmented_graph(G, G0)
 

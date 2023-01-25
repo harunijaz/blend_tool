@@ -1,5 +1,6 @@
 import numpy as np
 from lxml import etree
+import networkx as nx
 
 class ShapeBlender:
     '''
@@ -12,12 +13,12 @@ class ShapeBlender:
         self.inbetween_graph = None
     '''
     def create_augmented_graph(self, graph_source, graph_target):
-        # Create a copy of G
+        # Create a copy of graph_source
         graph_augmented = graph_source.copy()
         # Iterate over all nodes in graph_source
-        for node in graph_source.nodes():
+        for node in graph_source:
             # Get the corresponding node in graph_target
-            corresponding_node = self.find_corresponding_node(node, graph_source, graph_target)
+            corresponding_node = self.find_corresponding_node()
             # If there is no corresponding node, insert a null node
             if corresponding_node is None:
                 graph_augmented.add_node("null_" + str(node))
@@ -27,9 +28,9 @@ class ShapeBlender:
                     graph_augmented.add_node(str(node) + "_clone_" + str(i))
         return graph_augmented
 
-    def find_corresponding_node(node, G, G0):
-        # Iterate over all nodes in G0
-        for node0 in G0.nodes():
+    def find_corresponding_node(self, node, graph_source, graph_target):
+        # Iterate over all nodes in graph_target
+        for node0 in graph_target.nodes():
             # Check if the node label/id is the same
             if node0 == node:
                 return node0
@@ -313,27 +314,20 @@ class ShapeBlender:
         centroid = [sum(x_coords) / len(points), sum(y_coords) / len(points), sum(z_coords) / len(points)]
         return centroid
 
-    def parse_xml_lxml(self, file_path):
-        all_data = []
+    def create_graph_from_xml(self, file_path):
         tree = etree.parse(file_path)
         root = tree.getroot()
-        for node in root.findall('node'):
-            node_data = {}
-            node_data['id'] = node.find('id').text
-            node_data['type'] = node.find('type').text
-            node_data['mesh'] = node.find('mesh').text
-            node_data['controls'] = [c.text for c in node.findall('controls/c')]
-            node_data['points'] = [p.text for p in node.findall('point')]
-            node_data['weights'] = [w.text for w in node.findall('weights')]
-            all_data.append(node_data)
-
-        for node in root.findall('edge'):
-            edge_data = {}
-            edge_data['id'] = node.find('id').text
-            edge_data['type'] = node.find('type').text
-            all_data.append(edge_data)
-
-        return all_data
+        # Create a new empty graph
+        new_graph = nx.Graph()
+        # Iterate over the nodes in the XML file
+        for node in root.findall("node"):
+            node_id = node.find("id").text
+            new_graph.add_node(node_id)
+        # Iterate over the edges in the XML file
+        for edge in root.findall("edge"):
+            n = edge.findall('n')
+            new_graph.add_edge(n[0].text, n[1].text)
+        return new_graph
 
     def load_shape_from_obj(self, file_path, shape_type):
         """
