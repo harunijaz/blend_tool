@@ -15,6 +15,7 @@ class ShapeBlender:
     def create_augmented_graph(self, graph_source, graph_target):
         # Create a copy of graph_source
         graph_augmented = graph_source.copy()
+        print(list(graph_augmented))
         # Iterate over all nodes in graph_source
         for node in graph_source:
             # Get the corresponding node in graph_target

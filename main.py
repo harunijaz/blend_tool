@@ -15,14 +15,14 @@ if __name__ == "__main__":
     # Parse Source XML files
     path_to_source_shape_xml = "data/CB1_CB2/Source/SimpleChair1.xml"
     source_shape_graph = blend.create_graph_from_xml(path_to_source_shape_xml)
-    print(f"Source data: {len(list(source_shape_graph.edges))}")
+    #print(f"Source data: {len(list(source_shape_graph.edges))}")
     # Parse Target XML file
     path_to_target_shape_xml = "data/CB1_CB2/Target/shortChair01.xml"
     target_shape_graph = blend.create_graph_from_xml(path_to_target_shape_xml)
-    print(f"Target data: {len(list(target_shape_graph.edges))}")
+    #print(f"Target data: {len(list(target_shape_graph.edges))}")
 
     # Create augmented graph
-    #G, G0 = blend.create_augmented_graph(source_shape_xml, target_shape_xml)
+    G, G0 = blend.create_augmented_graph(source_shape_graph, target_shape_graph)
     """
     blend.add_edges_to_augmented_graph(G, G0)
 
