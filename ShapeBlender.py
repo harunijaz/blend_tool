@@ -4,42 +4,49 @@ import networkx as nx
 import csv
 
 class ShapeBlender:
-    '''
+
     def __init__(self):
         self.source_shape = None
         self.target_shape = None
         self.correspondence = None
         self.source_graph = None
         self.target_graph = None
-        self.inbetween_graph = None
-    '''
+        self.augmented_graph = None
+
     def create_augmented_graph(self, graph_source, graph_target, correspondence):
         # Create a copy of graph_source
-        graph_augmented = graph_source.copy()
+        self.augmented_graph = graph_source.copy()
         '''
         here we are doing this for source graph so remember that there may be one-to-many from either 
         source shape or target shape, so rows order matter in correspondence.txt file.
         we need to update this code here while preparing more corresponding data. most of code is manual.
         in future, we will handle if more than one records on one-to-many relations
         '''
-        for key, value in correspondence.items():
-            #if len(value) == 1:
-                #graph_augmented.remove_node('Back')
+        target_nodes_new = []
+        for value in correspondence.values():
+            if len(value) == 1:
+                source_node_old = value
             if len(value) > 1:
                 for v in value:
-                    graph_augmented.add_node(v)
-        return graph_augmented
+                    target_nodes_new.append(v)
+        self.replace_node_edges_augmented_graph(source_node_old, np.array(target_nodes_new))
+        print(f"add edges: {list(self.augmented_graph.edges)}")
 
-    def add_edges_to_augmented_graph(self, augmented_g, source_g):
-        for node in source_g:
-            corresponding_node = self.find_corresponding_node(node, G0)
-            if corresponding_node:
-                # Add edge between node and corresponding_node in G^
-                G.add_edge(node, corresponding_node)
-            else:
-                # Add edges between node and its corresponding edges in G^0
-                for corresponding_edge in self.correspondence[node]:
-                    G.add_edge(node, corresponding_edge[0], corresponding_edge[1])
+    def replace_node_edges_augmented_graph(self, old_node, new_nodes):
+        # Get the edges connected to the old node and also Convert type networkx_edge into list
+        edges = list(self.augmented_graph.edges(old_node))
+
+        # Remove the old node from the graph
+        self.augmented_graph.remove_node(old_node[0])
+
+        # Add the new nodes to the graph
+        for new_node in new_nodes:
+            self.augmented_graph.add_node(new_node)
+
+        # Add edges to the new nodes
+        for edge in edges:
+            for new_node in new_nodes:
+                self.augmented_graph.add_edge(edge[1], new_node)
     '''
     def stochastically_sample_blending_paths(self, G, G0, num_paths):
         blending_paths = []
