@@ -25,10 +25,11 @@ if __name__ == "__main__":
     #print(correspondence_txt)
 
     # Create augmented graph
-    G, G0 = blend.create_augmented_graph(source_shape_graph, target_shape_graph, correspondence_txt)
-    """
-    blend.add_edges_to_augmented_graph(G, G0)
+    created_augmented_graph = blend.create_augmented_graph(source_shape_graph, target_shape_graph, correspondence_txt)
+    print(list(created_augmented_graph.edges))
 
+    blend.add_edges_to_augmented_graph(created_augmented_graph, source_shape_graph)
+    """
     # Sample blending paths and generate in-between shapes
     blending_paths = blend.stochastically_sample_blending_paths(G, G0, num_samples)
     inbetween_shapes = []

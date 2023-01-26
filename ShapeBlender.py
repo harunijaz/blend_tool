@@ -16,31 +16,22 @@ class ShapeBlender:
     def create_augmented_graph(self, graph_source, graph_target, correspondence):
         # Create a copy of graph_source
         graph_augmented = graph_source.copy()
-        print(list(graph_augmented))
-        print(correspondence)
-        # Iterate over all nodes in graph_source
-        for node in graph_source:
-            # Get the corresponding node in graph_target
-            corresponding_node = self.find_corresponding_node()
-            # If there is no corresponding node, insert a null node
-            if corresponding_node is None:
-                graph_augmented.add_node("null_" + str(node))
-            # If there are multiple corresponding nodes, clone the current node
-            elif isinstance(corresponding_node, list):
-                for i in range(len(corresponding_node)):
-                    graph_augmented.add_node(str(node) + "_clone_" + str(i))
+        '''
+        here we are doing this for source graph so remember that there may be one-to-many from either 
+        source shape or target shape, so rows order matter in correspondence.txt file.
+        we need to update this code here while preparing more corresponding data. most of code is manual.
+        in future, we will handle if more than one records on one-to-many relations
+        '''
+        for key, value in correspondence.items():
+            #if len(value) == 1:
+                #graph_augmented.remove_node('Back')
+            if len(value) > 1:
+                for v in value:
+                    graph_augmented.add_node(v)
         return graph_augmented
 
-    def find_corresponding_node(self, node, graph_source, graph_target):
-        # Iterate over all nodes in graph_target
-        for node0 in graph_target.nodes():
-            # Check if the node label/id is the same
-            if node0 == node:
-                return node0
-        return None
-
-    def add_edges_to_augmented_graph(self, G, G0):
-        for node in G.nodes:
+    def add_edges_to_augmented_graph(self, augmented_g, source_g):
+        for node in source_g:
             corresponding_node = self.find_corresponding_node(node, G0)
             if corresponding_node:
                 # Add edge between node and corresponding_node in G^
@@ -188,13 +179,6 @@ class ShapeBlender:
         alpha = 0.5
         in_between = source + (target - source) * alpha
         return in_between
-
-    def find_corresponding_node(node, target_graph):
-
-        for target_node in target_graph.nodes:
-            if node.correspondence == target_node.correspondence:
-                return target_node
-        return None
 
     '''
     def find_seed_part(self, null_node, G0):
