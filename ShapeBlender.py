@@ -143,7 +143,8 @@ class ShapeBlender:
         for node in nodes:
             corresponding_node = self.find_corresponding_node(node, target_graph)
             if corresponding_node:
-                # Interpolate position of contact points along the curves/sheets connecting the start and end positions
+                # Interpolate position of contact points along the curves/sheets 
+                # connecting the start and end positions
                 self.interpolate_position(node, corresponding_node)
                 # Interpolate shape of node towards corresponding_node
                 self.interpolate_shape(node, corresponding_node)
