@@ -30,7 +30,7 @@ class ShapeBlender:
                 for v in value:
                     target_nodes_new.append(v)
         self.replace_node_edges_augmented_graph(source_node_old, np.array(target_nodes_new))
-        print(f"add edges: {list(self.augmented_graph.edges)}")
+        print(f"Length: {len(list(self.augmented_graph.nodes))}")
 
     def replace_node_edges_augmented_graph(self, old_node, new_nodes):
         # Get the edges connected to the old node and also Convert type networkx_edge into list
@@ -47,7 +47,7 @@ class ShapeBlender:
         for edge in edges:
             for new_node in new_nodes:
                 self.augmented_graph.add_edge(edge[1], new_node)
-    '''
+
     def stochastically_sample_blending_paths(self, G, G0, num_paths):
         blending_paths = []
         for i in range(num_paths):
@@ -63,6 +63,7 @@ class ShapeBlender:
             blending_paths.append(path)
         return blending_paths
 
+    '''
     def implausibility_filter(self, G, G0):
         if not self.check_global_reflection_symmetry(G, G0):
             return False
@@ -256,7 +257,14 @@ class ShapeBlender:
 
     def calculate_transformation(source_points, target_points):
         '''
-        This function takes in two input parameters, source_points and target_points, which are the corresponding points on the source and target shapes, respectively. It first calculates the centroid of the source and target points using numpy's mean function. Then it shifts the points to the origin by subtracting the centroid from each point. Next, it calculates the covariance matrix using numpy's dot function. It then calculates the singular value decomposition of the covariance matrix using numpy's svd function. From the SVD, it calculates the rotation matrix and the translation vector, which are used to transform the source shape to match the target shape.
+        This function takes in two input parameters, source_points and target_points,
+        which are the corresponding points on the source and target shapes, respectively.
+        It first calculates the centroid of the source and target points using numpy's mean function.
+        Then it shifts the points to the origin by subtracting the centroid from each point.
+        Next, it calculates the covariance matrix using numpy's dot function.
+        It then calculates the singular value decomposition of the covariance matrix
+        using numpy's svd function. From the SVD, it calculates the rotation matrix and
+        the translation vector, which are used to transform the source shape to match the target shape.
         '''
         source_points = np.array(source_points)
         target_points = np.array(target_points)
@@ -278,7 +286,10 @@ class ShapeBlender:
 
     def transform_point(point, transformation_matrix):
         '''
-        This function takes in a 3D point and a transformation matrix, and applies the transformation to the point by performing a matrix multiplication of the point's homogeneous coordinates with the transformation matrix. The function returns the transformed point in 3D coordinates.
+        This function takes in a 3D point and a transformation matrix,
+        and applies the transformation to the point by performing a matrix
+        multiplication of the point's homogeneous coordinates with the transformation matrix.
+        The function returns the transformed point in 3D coordinates.
         '''
         point_homo = np.append(point, 1)
         transformed_point_homo = np.matmul(transformation_matrix, point_homo)
@@ -300,7 +311,8 @@ class ShapeBlender:
 
     def calculate_centroid(points):
         '''
-        This function will take a list of points in the form of [x, y, z] and return the centroid (average of x, y, and z coordinates) as a list in the same form.
+        This function will take a list of points in the form of [x, y, z]
+        and return the centroid (average of x, y, and z coordinates) as a list in the same form.
         '''
         x_coords = [p[0] for p in points]
         y_coords = [p[1] for p in points]
